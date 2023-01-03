@@ -1,18 +1,18 @@
-#The following is a compilation of all major bash scripts used for our population genomic analyses:
+## The following is a compilation of all major bash scripts used for our population genomic analyses:
 
-# Process Radtags
-
-1
-
-# STACKS2 denovo.pl for Elimia, Ebell, Ecoc, Esp
+**Process Radtags**
 
 1
 
-# STACKS2 Populations Script for Multiple SNPs per Locus for ElimiaM, EbellM, EcocM, EspM
+**STACKS2 denovo.pl for Elimia, Ebell, Ecoc, Esp**
 
 1
 
-# STACKS2 Populations Script for a Single SNP per Locus for ElimiaS, EbellS, EcocS, EspS
+**STACKS2 Populations Script for Multiple SNPs per Locus for ElimiaM, EbellM, EcocM, EspM**
+
+1
+
+**STACKS2 Populations Script for a Single SNP per Locus for ElimiaS, EbellS, EcocS, EspS**
 
 1
 
