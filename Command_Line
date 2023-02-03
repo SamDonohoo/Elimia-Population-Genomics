@@ -44,7 +44,15 @@ iqtree -s bcNWR_wOut_Jan23.fas -m MFP -bb 1000 -pers 0.2 -nstop 500 -nt 16 --run
 
 ~/Programs/beast/bin/beast -threads 24 -beagle_SSE -beagle_scaling dynamic bcNWR_NoOut_populations.snps.reduced_5per_2.5Mgens.xml
 
-# Phylogenetic Inference for Gene Trees in IQTREE
+# Single Gene Trees for ASTRAL-III using IQTREE
 # For Loop to Cycle Through Individual Fasta Files Produced Previously
 
 for i in *.fasta; do ; iqtree -s $i -m MFP -bb 1000 -pers 0.2 -nstop 500 -nt 4 --runs 10; done
+
+# Newick Utilities Command to Collapse Nodes with Less than 10% BS on Single Gene Trees for ASTRAL
+
+nw_ed <inputTree.tre> ‘i & b<=10’ o > <outputTree.tre>
+
+# ASTRAL Command with Taxon Map
+
+java -jar astral.5.7.1.jar -i <singleGeneTrees.trees> -o <outputASTRAL_taxonMap.tre> -a <taxonMap>
