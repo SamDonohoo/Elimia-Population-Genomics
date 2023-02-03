@@ -34,10 +34,17 @@ python3 Convert_Stacks_Fasta_to_Loci.py --fast Ebell_m5M2n2_Populations_5_75_025
 
 perl /usr/local/genome/bin/FASconCAT-G_v1.04.pl -s
 
-# Phylogenetic Inference in IQTREE
+# Phylogenetic Inference in IQTREE - UnPartitioned Concatanated File
 
 iqtree -s E_no19_wOutgroup_supermatrix.fas -spp E_no19_wOutgroup_partition.txt -m MFP+MERGE -mset GTR -merit BIC -rcluster 10 -rcluster-max 1000 -safe -cptime 14400 -bb 1000 --runs 10
+
+iqtree -s bcNWR_wOut_Jan23.fas -m MFP -bb 1000 -pers 0.2 -nstop 500 -nt 16 --runs 10
 
 # Species Tree Inference in SNAPP - Reduced ElimiaS Dataset (Five Individuals per Species)
 
 ~/Programs/beast/bin/beast -threads 24 -beagle_SSE -beagle_scaling dynamic bcNWR_NoOut_populations.snps.reduced_5per_2.5Mgens.xml
+
+# Phylogenetic Inference for Gene Trees in IQTREE
+# For Loop to Cycle Through Individual Fasta Files Produced Previously
+
+for i in *.fasta; do ; iqtree -s $i -m MFP -bb 1000 -pers 0.2 -nstop 500 -nt 4 --runs 10; done
