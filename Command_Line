@@ -1,58 +1,76 @@
 # The following is a compilation of all major bash scripts used for our population genomic analyses:
 
-**Process Radtags**
-
-1
-
 # STACKS2 denovo.pl for Elimia, Ebell, Ecoc, Esp
 
-1
+denovo_map.pl --samples Spring_Snails_Samples/ --popmap E_bella_coc_Full_Popmap_wOutgroup_Ecar.txt --paired -m 5 -M 2 -n 2 -T 24 \
+-o E_bcNWR_wOutgroup -X "populations: -R 0.8"
 
 # STACKS2 Populations Script for Multiple SNPs per Locus
 
-1
+populations -P E_bcNWR_wOutgroup --popmap E_bella_coc_Full_Popmap_wOutgroup_Ecar.txt -t 8 -O EbcNWR_Ecar_5.80.025.05_Multi/ \
+-p 5 -r 0.8 --min-maf 0.025 --max-obs-het 0.5 --fasta-samples --vcf --radpainter --structure --genepop \
+--plink --phylip-var --fstats
 
 # STACKS2 Populations Script for a Single SNP per Locus
 
-1
+populations -P E_bcNWR_wOutgroup --popmap E_bella_coc_Full_Popmap_wOutgroup_Ecar.txt -t 8 -O EbcNWR_Ecar_5.80.025.05_Single/ \
+-p 5 -r 0.8 --min-maf 0.025 --max-obs-het 0.5 --fasta-samples --vcf --radpainter --structure --genepop \
+--plink --phylip-var --fstats --treemix --write-single-snp
 
 # Bayescan using ElimiaS, EbellS, EcocS, EspS Datasets
 
-1
+bayescan ElimiaS.bayescan.txt -od EbcNWR_Ecar_5.80.025.05_Single/ -threads 10 -n 5000 -pr_odds 1000
+
+bayescan ElimiaS.bayescan.txt -od EbcNWR_Ecar_5.80.025.05_Single/ -threads 10 -n 5000 -pr_odds 10000
 
 # Assessing Genetic Co-ancestry in fineSTRUCTURE using ElimiaM, EbellM, EcocM, EspM Datasets
 
-1
+RADpainter paint E_sp_VC_1.80.025.05_M.haps.radpainter
+
+finestructure -x 100000 -y 100000 E_sp_VC_1.80.025.05_M.haps_chunks.out E_sp_VC_1.80.025.05_M.haps_chunks.mcmc.xml
+
+finestructure -m -T -x 10000 E_sp_VC_1.80.025.05_M.haps_chunks.out E_sp_VC_1.80.025.05_M.haps_chunks.mcmc.xml E_sp_VC_1.80.025.05_M.haps_chunks.mcmcTree.xml
 
 # Migration (Edge) Testing in Treemix using Modified ElimiaS Dataset
+## Create a conda enviroment with Treemix + ipyrad
+## Convert ElimiaS.snps.vcf to hdf5 file.
 
-1
+conda activate Treemix
 
-# Converting Loci to Fasta Files follwed by Concatation into a Supermatrix using Modified ElimiaM Dataset
+Python3 Treemix_vcftohdf5.py
 
-python3 Convert_Stacks_Fasta_to_Loci.py --fast Ebell_m5M2n2_Populations_5_75_025_05_Corrected_Multi/populations.samples.fa --outdir Fasta_to_Loci/ -a consensus
+## Run ipyrad script Treemix_Initial.py to generate Treemix Command. Use Treemix Command in a for loop.
+## Then using R script Treemix_ElimiaS.R Determine the best number of migrations and generate Trees.
+
+for i in {0..5}\ do /home/sad0046/miniconda3/envs/treemix/bin/treemix -i /home/sad0046/Treemix_Redo_Nov23/analysis-vcf2hdf5/analysis-treemix/test.treemix.in.gz \
+-o /home/sad0046/Treemix_Redo_Nov23/analysis-vcf2hdf5/analysis-treemix/Nov.$i -bootstrap -k 500 -m $i \
+-seed 412620476 -root Ecar > Treemix_ElimiaS_Nov_Redo_${i}.log & done
+
+# Converting Loci to Fasta Files follwed by Concatation into a Supermatrix using ElimiaM Dataset
+
+python3 Convert_Stacks_Fasta_to_Loci.py --fast ElimiaM.populations.samples.fa --outdir Fasta_to_Loci/ -a consensus
 
 perl /usr/local/genome/bin/FASconCAT-G_v1.04.pl -s
 
-# Phylogenetic Inference in IQTREE - UnPartitioned Concatanated File
+# Phylogenetic Inference in IQTREE - Partitioned by Locus Concatanated File
 
-iqtree -s E_no19_wOutgroup_supermatrix.fas -spp E_no19_wOutgroup_partition.txt -m MFP+MERGE -mset GTR -merit BIC -rcluster 10 -rcluster-max 1000 -safe -cptime 14400 -bb 1000 --runs 10
+iqtree -s ElimiaM_supermatrix.fas -spp ElimiaM_partition.txt -m MFP -bb 1000 --runs 10
 
-iqtree -s bcNWR_wOut_Jan23.fas -m MFP -bb 1000 -pers 0.2 -nstop 500 -nt 16 --runs 10
+# Species Tree Inference in SNAPP - ElimiaS_SNAPP Dataset (Five Individuals per Species)
 
-# Species Tree Inference in SNAPP - Reduced ElimiaS Dataset (Five Individuals per Species)
-
-~/Programs/beast/bin/beast -threads 24 -beagle_SSE -beagle_scaling dynamic bcNWR_NoOut_populations.snps.reduced_5per_2.5Mgens.xml
+~/Programs/beast/bin/beast -threads 24 ElimiaS_SNAPP_populations.snps.reduced_5per_2.5Mgens.xml
 
 # Single Gene Trees for ASTRAL-III using IQTREE
 # For Loop to Cycle Through Individual Fasta Files Produced Previously
 
 for i in *.fasta; do ; iqtree -s $i -m MFP -bb 1000 -pers 0.2 -nstop 500 -nt 4 --runs 10; done
 
+cat *.treefile > ASTRAL_GeneTrees.tre
+
 # Newick Utilities Command to Collapse Nodes with Less than 10% BS on Single Gene Trees for ASTRAL
 
-nw_ed <inputTree.tre> 'i & b<=10' o > <outputTree.tre>
+nw_ed ASTRAL_GeneTrees.tre 'i & b<=10' o > ASTRAL_GeneTrees_BS10.tre
 
 # ASTRAL Command with Taxon Map
 
-java -jar astral.5.7.1.jar -i <singleGeneTrees.trees> -o <outputASTRAL_taxonMap.tre> -a <taxonMap>
+java -jar astral.5.7.1.jar -i ASTRAL_GeneTrees_BS10.tre -o ASTRAL_SpeciesTree.tre -a TaxonMap.txt
