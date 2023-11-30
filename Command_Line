@@ -74,3 +74,7 @@ nw_ed ASTRAL_GeneTrees.tre 'i & b<=10' o > ASTRAL_GeneTrees_BS10.tre
 # ASTRAL Command with Taxon Map
 
 java -jar astral.5.7.1.jar -i ASTRAL_GeneTrees_BS10.tre -o ASTRAL_SpeciesTree.tre -a TaxonMap.txt
+
+# SNAQ Command Line in Julia outlined in SNAQ_Command_Line.txt
+
+# fastsimcoal2 (FSC27) Command Line outlined in Fastsimcoal2_Command_Line.txt
