@@ -1,0 +1,149 @@
+# Commands for running SNAQ using PhyloNetworks in the program language Julia.
+# Start by downloading Julia and the following packages: PhyloNetworks, CSV, PhyloPlots, DataFrames, RCall
+
+# Input files include gene trees (raxml, iqtree etc.) and a species tree from ASTRAL-III.
+
+## Open Julia. Load packages for SNAQ analysis.
+
+using PhyloNetworks, CSV, PhyloPlots, DataFrames, RCall
+
+## Assign individuals to a species taxon map. See mappingIndividuals.csv for an example of formatting.
+
+mappingfile = "mappingIndividuals.csv";
+
+tm = CSV.read(mappingfile, DataFrame)
+
+## Assign and load in ML trees from IQtree. This is a one concatanted file of individual locus trees.
+
+iqtreetrees = "GeneTrees.tre"
+
+genetress = readMultiTopology(iqtreetrees);
+
+# Check if Trees are using species taxon map. Individuals in the same species should have the same name. 
+# SNAQ keeps track of the individuals, but will only report the species overall similar to ASTRAL-III.
+
+sort(tipLabels(genetrees[1]))
+
+# Calculate quartet CFs at the species level.
+
+df_sp = writeTableCF(countquartetsintrees(genetrees, taxonmap, showprogressbar=false)...)
+
+CSV.write("tableCF_species.csv", df_sp);
+
+raxmlCF = readTableCF("tableCF_species.csv")
+
+# Assign and load ASTRAL-III species tree.
+
+astralfile = "SpringSnails_ASTRAL.tre"
+
+astraltree = readMultiTopology(astralfile)[1]
+
+# Begin nested Analysis. Generate Network, Save SVG, and generate Observed vs Expected quartet CFs for graphing later.
+
+## Net 0
+
+net0 = snaq!(astraltree,raxmlCF, hmax=0, filename="net0", seed=1234)
+
+R"svg('net0.svg', width=4, height=4)"
+
+R"par"(mar=[0,0,0,0])
+
+plot(net0);
+
+R"dev.off()"
+
+topologyMaxQPseudolik!(net0, raxmlCF);
+
+df_long = fittedQuartetCF(raxmlCF, :long)
+
+CSV.write("fittedCF_net0.csv", df_long)
+
+### Net 1
+
+net1 = snaq!(net0,raxmlCF, hmax=1, filename="net1", seed=2345)
+
+R"svg('net1.svg', width=4, height=4)"
+
+R"par"(mar=[0,0,0,0])
+
+plot(net1);
+
+R"dev.off()"
+
+topologyMaxQPseudolik!(net1, raxmlCF);
+
+df_long = fittedQuartetCF(raxmlCF, :long)
+
+CSV.write("fittedCF_net1.csv", df_long)
+
+### Net 2
+
+net2 = snaq!(net1,raxmlCF, hmax=2, filename="net2", seed=3456)
+
+R"svg('net2.svg', width=4, height=4)"
+
+R"par"(mar=[0,0,0,0])
+
+plot(net2);
+
+R"dev.off()"
+
+topologyMaxQPseudolik!(net2, raxmlCF);
+
+df_long = fittedQuartetCF(raxmlCF, :long)
+
+CSV.write("fittedCF_net2.csv", df_long)
+
+### Net 3
+
+net3 = snaq!(net2,raxmlCF, hmax=3, filename="net3", seed=4567)
+
+R"svg('net3.svg', width=4, height=4)"
+
+R"par"(mar=[0,0,0,0])
+
+plot(net3);
+
+R"dev.off()"
+
+topologyMaxQPseudolik!(net3, raxmlCF);
+
+df_long = fittedQuartetCF(raxmlCF, :long)
+
+CSV.write("fittedCF_net3.csv", df_long)
+
+### Net 4 - Start Here SAM
+
+net4 = snaq!(net3,raxmlCF, hmax=4, filename="net4", seed=5678)
+
+R"svg('net4.svg', width=4, height=4)"
+
+R"par"(mar=[0,0,0,0])
+
+plot(net4);
+
+R"dev.off()"
+
+topologyMaxQPseudolik!(net4, raxmlCF);
+
+df_long = fittedQuartetCF(raxmlCF, :long)
+
+CSV.write("fittedCF_net4.csv", df_long)
+
+### Net 5
+
+net5 = snaq!(net4,raxmlCF, hmax=5, filename="net5", seed=6789)
+
+R"svg('net5.svg', width=4, height=4)"
+
+R"par"(mar=[0,0,0,0])
+
+plot(net5);
+
+R"dev.off()"
+
+topologyMaxQPseudolik!(net5, raxmlCF);
+
+df_long = fittedQuartetCF(raxmlCF, :long)
+
+CSV.write("fittedCF_net5.csv", df_long)
