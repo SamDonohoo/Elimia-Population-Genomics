@@ -2,7 +2,7 @@
 
 # STACKS2 denovo.pl for Elimia, Ebell, Ecoc, Esp
 
-denovo_map.pl --samples Spring_Snails_Samples/ --popmap E_bella_coc_Full_Popmap_wOutgroup_Ecar.txt --paired -m 5 -M 2 -n 2 -T 24 \
+denovo_map.pl --samples Spring_Snails_Samples/ --popmap E_bella_coc_Full_Popmap_wOutgroup_Ecar.txt -m 5 -M 2 -n 2 -T 24 \
 -o E_bcNWR_wOutgroup -X "populations: -R 0.8"
 
 # STACKS2 Populations Script for Multiple SNPs per Locus
