@@ -15,7 +15,7 @@ tm = CSV.read(mappingfile, DataFrame)
 
 ## Assign and load in ML trees from IQtree. This is a one concatanted file of individual locus trees.
 
-iqtreetrees = "GeneTrees.tre"
+iqtreetrees = "ASTRAL_GeneTrees_BS10.tre"
 
 genetress = readMultiTopology(iqtreetrees);
 
