@@ -50,7 +50,7 @@ for i in {0..5}\ do /home/sad0046/miniconda3/envs/treemix/bin/treemix -i /home/s
 
 python3 Convert_Stacks_Fasta_to_Loci.py --fast ElimiaM.populations.samples.fa --outdir Fasta_to_Loci/ -a consensus
 
-perl /usr/local/genome/bin/FASconCAT-G_v1.04.pl -s
+perl /usr/local/genome/bin/FASconCAT-G_v1.04.pl -s -l
 
 # Phylogenetic Inference in IQTREE - Partitioned by Locus Concatanated File
 
