@@ -29,7 +29,7 @@ RADpainter paint E_sp_VC_1.80.025.05_M.haps.radpainter
 
 finestructure -x 100000 -y 100000 E_sp_VC_1.80.025.05_M.haps_chunks.out E_sp_VC_1.80.025.05_M.haps_chunks.mcmc.xml
 
-finestructure -m -T -x 10000 E_sp_VC_1.80.025.05_M.haps_chunks.out E_sp_VC_1.80.025.05_M.haps_chunks.mcmc.xml E_sp_VC_1.80.025.05_M.haps_chunks.mcmcTree.xml
+finestructure -m T -x 10000 E_sp_VC_1.80.025.05_M.haps_chunks.out E_sp_VC_1.80.025.05_M.haps_chunks.mcmc.xml E_sp_VC_1.80.025.05_M.haps_chunks.mcmcTree.xml
 
 # Migration (Edge) Testing in Treemix using Modified ElimiaS Dataset
 ## Create a conda enviroment with Treemix + ipyrad
