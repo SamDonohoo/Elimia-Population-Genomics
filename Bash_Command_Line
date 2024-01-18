@@ -58,6 +58,12 @@ iqtree -s ElimiaM_supermatrix.fas -spp ElimiaM_partition.txt -m MFP -bb 1000 --r
 
 # Species Tree Inference in SNAPP - ElimiaS_SNAPP Dataset (Five Individuals per Species)
 
+## Convert SNPs VCF file into a Nexus File
+
+python3 ~/Scripts/vcf2phylip.py -i ElimiaS_SNAPP.snps.vcf -p -b
+
+### Create beast XML using BEAUTi and Converted Nexus File
+
 ~/Programs/beast/bin/beast -threads 24 ElimiaS_SNAPP_populations.snps.reduced_5per_2.5Mgens.xml
 
 # Single Gene Trees for ASTRAL-III using IQTREE
