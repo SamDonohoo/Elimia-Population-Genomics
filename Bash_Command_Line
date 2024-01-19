@@ -46,9 +46,9 @@ Python3 Treemix_vcftohdf5.py
 ## Run ipyrad script Treemix_Initial.py to generate Treemix Command. Use Treemix Command in a for loop.
 ## Then using R script Treemix_ElimiaS.R Determine the best number of migrations and generate Trees.
 
-for i in {0..5}\ do /home/sad0046/miniconda3/envs/treemix/bin/treemix -i /home/sad0046/Treemix_Redo_Nov23/analysis-vcf2hdf5/analysis-treemix/test.treemix.in.gz \
--o /home/sad0046/Treemix_Redo_Nov23/analysis-vcf2hdf5/analysis-treemix/Nov.$i -bootstrap -k 500 -m $i \
--seed 412620476 -root Ecar > Treemix_ElimiaS_Nov_Redo_${i}.log & done
+for i in {0..5}; do /home/sad0046/miniconda3/envs/treemix/bin/treemix -i /home/sad0046/2024_SpringSnails/Treemix/analysis-vcf2hdf5/analysis-treemix/test.treemix.in.gz \
+-o /home/sad0046/2024_SpringSnails/Treemix/analysis-vcf2hdf5/analysis-treemix/Jan24.$i -bootstrap -k 500 -m $i -seed 612730578 \
+-root EcarNWR > Treemix_ElimiaS_Jan_Redo_${i}.log; done
 
 # Converting Loci to Fasta Files follwed by Concatation into a Supermatrix using ElimiaM Dataset
 
