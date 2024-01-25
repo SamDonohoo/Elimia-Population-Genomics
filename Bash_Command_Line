@@ -54,11 +54,26 @@ for i in {0..5}; do /home/sad0046/miniconda3/envs/treemix/bin/treemix -i /home/s
 
 python3 Convert_Stacks_Fasta_to_Loci.py --fast ElimiaM.populations.samples.fa --outdir Fasta_to_Loci/ -a consensus
 
+## Determine which loci are informative using FASconCAT-G
+
+perl /usr/local/genome/bin/FASconCAT-G_v1.04.pl -s -j
+
+## Resort the resulting FcC_info.xlsx file based on # of Ambiguous Sites. These are the loci that are informative.
+## Create a list of informative loci
+
+awk -F "," '{print $1}' FcC_Inform.csv > Names.txt
+
+## Make a new directory. Then copy the informative loci into the new directory.
+
+cat Names.txt | while read line; do cp ../Fasta_to_Loci/$line .; done
+
+## Run FASconCAT-G a second time to create a Concatanated Fasta File and Loci Partition File
+
 perl /usr/local/genome/bin/FASconCAT-G_v1.04.pl -s -l
 
-# Phylogenetic Inference in IQTREE - Partitioned by Locus Concatanated File
+# Phylogenetic Inference in IQTREE 
 
-iqtree -s ElimiaM_supermatrix.fas -spp ElimiaM_partition.txt -m MFP -bb 1000 --runs 10
+iqtree -s EbcNWR_Jan24_supermatrix.fas -spp EbcNWR_Jan24_supermatrix_partition.txt -m MFP+MERGE -rclusterf 20 -safe -nt 64 -bb 1000 --runs 10
 
 # Species Tree Inference in SNAPP - ElimiaS_SNAPP Dataset (Five Individuals per Species)
 
