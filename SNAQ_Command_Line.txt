@@ -80,7 +80,7 @@ topologyMaxQPseudolik!(net3, raxmlCF);
 df_long = fittedQuartetCF(raxmlCF, :long)
 CSV.write("fittedCF_net3.csv", df_long)
 
-### Net 4 - Start Here SAM
+### Net 4
 
 net4 = snaq!(net3,raxmlCF, hmax=4, filename="net4", seed=5678)
 R"svg('net4.svg', width=4, height=4)"
