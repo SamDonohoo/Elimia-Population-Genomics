@@ -4,7 +4,7 @@
 
 for i in *.1.fasta; do grep ">" $i | wc -l >> ReadCount.txt; done
 
-# STACKS2 denovo.pl for Elimia, Ebell, Ecoc, Esp
+# STACKS2 denovo.pl for Distinct Lineages
 
 denovo_map.pl --samples Spring_Snails_Samples/ --popmap E_bella_coc_Full_Popmap_wOutgroup_Ecar.txt -m 5 -M 2 -n 2 -T 24 \
 -o E_bcNWR_wOutgroup -X "populations: -R 0.8"
@@ -21,38 +21,32 @@ populations -P E_bcNWR_wOutgroup --popmap E_bella_coc_Full_Popmap_wOutgroup_Ecar
 -p 5 -r 0.8 --min-maf 0.025 --max-obs-het 0.5 --fasta-samples --vcf --radpainter --structure --genepop \
 --plink --phylip-var --fstats --treemix --write-single-snp
 
-# Bayescan using ElimiaS, EbellS, EcocS, EspS Datasets
+# Bayescan using Single SNP per Locus Datasets
 
-bayescan ElimiaS.bayescan.txt -od EbcNWR_Ecar_5.80.025.05_Single/ -threads 10 -n 5000 -pr_odds 1000
+bayescan Elimia_R80_maf025_Single.bayescan.txt -od EbcNWR_Ecar_5.80.025.05_Single/ -threads 10 -n 5000 -pr_odds 1000
 
-bayescan ElimiaS.bayescan.txt -od EbcNWR_Ecar_5.80.025.05_Single/ -threads 10 -n 5000 -pr_odds 10000
+bayescan Elimia_R80_maf025_Single.bayescan.txt -od EbcNWR_Ecar_5.80.025.05_Single/ -threads 10 -n 5000 -pr_odds 10000
 
-# Assessing Genetic Co-ancestry in fineSTRUCTURE using ElimiaM, EbellM, EcocM, EspM Datasets
+# Assessing Genetic Co-ancestry in fineSTRUCTURE using Multiple SNPS per Locus Datasets
 
-RADpainter paint E_sp_VC_1.80.025.05_M.haps.radpainter
+RADpainter paint E_coc_VC_R80_maf025_Multiple.haps.radpainter
 
-finestructure -x 100000 -y 100000 E_sp_VC_1.80.025.05_M.haps_chunks.out E_sp_VC_1.80.025.05_M.haps_chunks.mcmc.xml
+finestructure -x 100000 -y 100000 E_coc_VC_R80_maf025_Multiple.haps_chunks.out E_coc_VC_R80_maf025_Multiple.haps_chunks.mcmc.xml
 
-finestructure -m T -x 10000 E_sp_VC_1.80.025.05_M.haps_chunks.out E_sp_VC_1.80.025.05_M.haps_chunks.mcmc.xml E_sp_VC_1.80.025.05_M.haps_chunks.mcmcTree.xml
+finestructure -m T -x 10000 E_coc_VC_R80_maf025_Multiple.haps_chunks.out E_coc_VC_R80_maf025_Multiple.haps_chunks.mcmc.xml \
+E_coc_VC_R80_maf025_Multiple.haps_chunks.mcmcTree.xml
 
-# Migration (Edge) Testing in Treemix using Modified ElimiaS Dataset
-## Create a conda enviroment with Treemix + ipyrad
-## Convert ElimiaS.snps.vcf to hdf5 file.
+# Migration (Edge) Testing in OrientAGraph using Elimia_R80_maf025_Single_Orient Dataset
+## For Loop to Cycle Through Increasing Migrations
 
-conda activate Treemix
+for i in {0..5}; do ~/Programs/OrientAGraph/src/orientagraph \
+-i /home/sad0046/SpringSnail_Redo_2024/E_bcNWR_Treemix_4.80.025.50_Single/Elimia_R80_maf025_Single_Orient.treemix.gz \
+-o /home/sad0046/SpringSnail_Redo_2024/E_bcNWR_Treemix_4.80.025.50_Single/Treemix/Elimia_R80_maf025_Single_Orient.$i \
+-bootstrap 1000 -k 500 -m $i -root Ecar -seed 612730578 -allmigs 1,2,3,4,5 -mnlo > Elimia_R80_maf025_Single_Orient_$i.log; done
 
-Python3 Treemix_vcftohdf5.py
+# Converting Loci to Fasta Files follwed by Concatation into a Supermatrix using Elimia_R80_maf025_Multi Dataset
 
-## Run ipyrad script Treemix_Initial.py to generate Treemix Command. Use Treemix Command in a for loop.
-## Then using R script Treemix_ElimiaS.R Determine the best number of migrations and generate Trees.
-
-for i in {0..5}; do /home/sad0046/miniconda3/envs/treemix/bin/treemix -i /home/sad0046/2024_SpringSnails/Treemix/analysis-vcf2hdf5/analysis-treemix/test.treemix.in.gz \
--o /home/sad0046/2024_SpringSnails/Treemix/analysis-vcf2hdf5/analysis-treemix/Jan24.$i -bootstrap -k 500 -m $i -seed 612730578 \
--root EcarNWR > Treemix_ElimiaS_Jan_Redo_${i}.log; done
-
-# Converting Loci to Fasta Files follwed by Concatation into a Supermatrix using ElimiaM Dataset
-
-python3 Convert_Stacks_Fasta_to_Loci.py --fast ElimiaM.populations.samples.fa --outdir Fasta_to_Loci/ -a consensus
+python3 Convert_Stacks_Fasta_to_Loci.py --fast Elimia_R80_maf025_Multi.populations.samples.fa --outdir Fasta_to_Loci/ -a consensus
 
 ## Determine which loci are informative using FASconCAT-G
 
@@ -73,17 +67,17 @@ perl /usr/local/genome/bin/FASconCAT-G_v1.04.pl -s -l
 
 # Phylogenetic Inference in IQTREE 
 
-iqtree -s EbcNWR_Jan24_supermatrix.fas -spp EbcNWR_Jan24_supermatrix_partition.txt -m MFP+MERGE -rclusterf 20 -safe -nt 64 -bb 1000 --runs 10
+iqtree -s Elimia_R80_maf025_Multi_supermatrix.fas -spp Elimia_R80_maf025_Multi_supermatrix_partition.txt -m MFP+MERGE -rclusterf 20 -safe -nt 64 -bb 1000 --runs 10
 
-# Species Tree Inference in SNAPP - ElimiaS_SNAPP Dataset (Five Individuals per Species)
+# Species Tree Inference in SNAPP - Elimia_R80_maf025_Single_SNAPP Dataset (Five Individuals per Species)
 
 ## Convert SNPs VCF file into a Nexus File
 
-python3 ~/Scripts/vcf2phylip.py -i ElimiaS_SNAPP.snps.vcf -p -b
+python3 ~/Scripts/vcf2phylip.py -i Elimia_R80_maf025_Single_SNAPP.snps.vcf -p -b
 
 ### Create beast XML using BEAUTi and Converted Nexus File
 
-~/Programs/beast/bin/beast -threads 24 ElimiaS_SNAPP_populations.snps.reduced_5per_2.5Mgens.xml
+~/Programs/beast/bin/beast -threads 24 Elimia_R80_maf025_Single_SNAPP.snps.reduced_5per_2.5Mgens.xml
 
 # Single Gene Trees for ASTRAL-III using IQTREE
 # For Loop to Cycle Through Individual Fasta Files Produced Previously
