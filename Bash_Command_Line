@@ -67,7 +67,8 @@ perl /usr/local/genome/bin/FASconCAT-G_v1.04.pl -s -l
 
 # Phylogenetic Inference in IQTREE 
 
-iqtree -s Elimia_R80_maf025_Multi_supermatrix.fas -spp Elimia_R80_maf025_Multi_supermatrix_partition.txt -m MFP+MERGE -rclusterf 20 -safe -nt 64 -bb 1000 --runs 10
+iqtree -s Elimia_R80_maf025_Multi_supermatrix.fas -spp Elimia_R80_maf025_Multi_supermatrix_partition.txt -m MFP+MERGE -rclusterf 20 \
+-rcluseter-max 1000 -safe -nt 64 -bb 1000 --runs 10
 
 # Species Tree Inference in SNAPP - Elimia_R80_maf025_Single_SNAPP Dataset (Five Individuals per Species)
 
