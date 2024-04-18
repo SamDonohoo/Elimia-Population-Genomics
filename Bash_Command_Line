@@ -46,22 +46,9 @@ for i in {0..5}; do ~/Programs/OrientAGraph/src/orientagraph \
 
 # Converting Loci to Fasta Files follwed by Concatation into a Supermatrix using Elimia_R80_maf025_Multi Dataset
 
-python3 Convert_Stacks_Fasta_to_Loci.py --fast Elimia_R80_maf025_Multi.populations.samples.fa --outdir Fasta_to_Loci/ -a consensus
+python3 Convert_Stacks_Fasta_to_Loci.py --fast Elimia_R80_maf025_Multi.populations.samples.fa --outdir Fasta_to_Loci/ -a consensus --variable
 
 ## Determine which loci are informative using FASconCAT-G
-
-perl /usr/local/genome/bin/FASconCAT-G_v1.04.pl -s -j
-
-## Resort the resulting FcC_info.xlsx file based on # of Ambiguous Sites. These are the loci that are informative.
-## Create a list of informative loci
-
-awk -F "," '{print $1}' FcC_Inform.csv > Names.txt
-
-## Make a new directory. Then copy the informative loci into the new directory.
-
-cat Names.txt | while read line; do cp ../Fasta_to_Loci/$line .; done
-
-## Run FASconCAT-G a second time to create a Concatanated Fasta File and Loci Partition File
 
 perl /usr/local/genome/bin/FASconCAT-G_v1.04.pl -s -l
 
