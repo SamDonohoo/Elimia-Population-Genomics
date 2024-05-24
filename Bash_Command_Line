@@ -11,21 +11,21 @@ denovo_map.pl --samples Spring_Snails_Samples/ --popmap E_bella_coc_Full_Popmap_
 
 # STACKS2 Populations Script for Multiple SNPs per Locus
 
-populations -P E_bcNWR_wOutgroup --popmap E_bella_coc_Full_Popmap_wOutgroup_Ecar.txt -t 8 -O EbcNWR_Ecar_5.80.025.05_Multi/ \
+populations -P E_bcNWR_wOutgroup --popmap E_bella_coc_Full_Popmap_wOutgroup_Ecar.txt -t 8 -O Elimia_R80_maf025_Multi/ \
 -p 5 -r 0.8 --min-maf 0.025 --max-obs-het 0.5 --fasta-samples --vcf --radpainter --structure --genepop \
 --plink --phylip-var --fstats
 
 # STACKS2 Populations Script for a Single SNP per Locus
 
-populations -P E_bcNWR_wOutgroup --popmap E_bella_coc_Full_Popmap_wOutgroup_Ecar.txt -t 8 -O EbcNWR_Ecar_5.80.025.05_Single/ \
+populations -P E_bcNWR_wOutgroup --popmap E_bella_coc_Full_Popmap_wOutgroup_Ecar.txt -t 8 -O Elimia_R80_maf025_Single/ \
 -p 5 -r 0.8 --min-maf 0.025 --max-obs-het 0.5 --fasta-samples --vcf --radpainter --structure --genepop \
 --plink --phylip-var --fstats --treemix --write-single-snp
 
 # Bayescan using Single SNP per Locus Datasets
 
-bayescan Elimia_R80_maf025_Single.bayescan.txt -od EbcNWR_Ecar_5.80.025.05_Single/ -threads 10 -n 5000 -pr_odds 1000
+bayescan Elimia_R80_maf025_Single.bayescan.txt -od Elimia_R80_maf025_Single/ -threads 10 -n 5000 -pr_odds 1000
 
-bayescan Elimia_R80_maf025_Single.bayescan.txt -od EbcNWR_Ecar_5.80.025.05_Single/ -threads 10 -n 5000 -pr_odds 10000
+bayescan Elimia_R80_maf025_Single.bayescan.txt -od Elimia_R80_maf025_Single/ -threads 10 -n 5000 -pr_odds 10000
 
 # Assessing Genetic Co-ancestry in fineSTRUCTURE using Multiple SNPS per Locus Datasets
 
@@ -54,7 +54,7 @@ perl /usr/local/genome/bin/FASconCAT-G_v1.04.pl -s -l
 
 # Phylogenetic Inference in IQTREE 
 
-iqtree -s Elimia_R80_maf025_Multi_supermatrix.fas -spp Elimia_R80_maf025_Multi_supermatrix_partition.txt -m MFP+MERGE -rclusterf 20 \
+iqtree -s Elimia_R80_maf025_Multi_Supermatrix.fas -spp Elimia_R80_maf025_Multi_Partition.txt -m MFP+MERGE -rclusterf 20 \
 -rcluseter-max 1000 -safe -nt 64 -bb 1000 --runs 10
 
 # Species Tree Inference in SNAPP - Elimia_R80_maf025_Single_SNAPP Dataset (Five Individuals per Species)
@@ -65,7 +65,7 @@ python3 ~/Scripts/vcf2phylip.py -i Elimia_R80_maf025_Single_SNAPP.snps.vcf -p -b
 
 ### Create beast XML using BEAUTi and Converted Nexus File
 
-~/Programs/beast/bin/beast -threads 24 Elimia_R80_maf025_Single_SNAPP.snps.reduced_5per_2.5Mgens.xml
+~/Programs/beast/bin/beast -threads 24 Elimia_R80_maf025_Single_SNAPP.2.5Mgens.xml
 
 # Single Gene Trees for ASTRAL-III using IQTREE
 # For Loop to Cycle Through Individual Fasta Files Produced Previously
@@ -76,11 +76,11 @@ cat *.treefile > ASTRAL_GeneTrees.tre
 
 # Newick Utilities Command to Collapse Nodes with Less than 10% BS on Single Gene Trees for ASTRAL
 
-nw_ed ASTRAL_GeneTrees.tre 'i & b<=10' o > ASTRAL_GeneTrees_BS10.tre
+nw_ed ASTRAL_GeneTrees.tre 'i & b<=10' o > Elimia_R80_maf025_Multi_GeneTrees_BS10.tre
 
 # ASTRAL Command with Taxon Map
 
-java -jar astral.5.7.1.jar -i ASTRAL_GeneTrees_BS10.tre -o ASTRAL_SpeciesTree.tre -a TaxonMap.txt
+java -jar astral.5.7.1.jar -i Elimia_R80_maf025_Multi_GeneTrees_BS10.tre -o Elimia_R80_maf025_Multi_ASTRAL_noTaxonMap.tre -a Elimia_R80_maf025_Multi_ASTRAL_Taxonmap.txt
 
 # SNAQ Command Line in Julia outlined in SNAQ_Command_Line.txt
 
