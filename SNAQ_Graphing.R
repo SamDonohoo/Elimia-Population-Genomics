@@ -3,6 +3,8 @@ setwd("C:/Users/pred9/Desktop/AU_PhD/Auburn Stuff/2DRad-Ebell-Ecoc/Nov_Redos/SNA
 library(ggplot2)
 library(cowplot)
 
+# Plot Network Scores to Determine Best-Fit Number of Hybridizations
+
 log <- c(2.93301449048633, 0.9480285425489448, 0.9387601564333179, 
          0.938760019222864, 0.9387599833337426, 0.9387599445276199)
 
@@ -10,6 +12,7 @@ hmax <- c(0:5)
 
 plot(hmax, log, type="b", ylab="Network Score", xlab="hmax", col="blue", pch = 16)
 
+## Plot Expected Concordance Factors (CF) for each Network.
 # Extract Expected CFs - Net 0
 
 data <- read.csv("fittedCF_net0.csv")
