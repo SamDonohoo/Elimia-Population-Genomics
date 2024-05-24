@@ -11,10 +11,15 @@ The following are sample scripts used for a single dataset:
   * OrientAGraph_Visualization.R
   * SNAQ_Visualization.R
 
+  * SNAQ_Command_Line.txt
+
 The following are samples of scripts that were used with several datasets:
 
   * BayesScan_R_Visualization.R
+  * E_bellacrenata_FSC2_Demographic_Analyses.R
   * RADpainter_Standard_Visualization.R
+
+  * Ebellacrenata_fastsimcoal2_CommandLine.txt
 
 ### Check These Repositories for the Most Current Version of the Following Scripts
 
