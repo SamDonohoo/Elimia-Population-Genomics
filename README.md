@@ -1,10 +1,20 @@
-# Elimia-Population-Genomics
+## Elimia-Population-Genomics
 
-## Scripts and Command Line used During Data Analyis
+Scripts and command line from study on spring-associated pleurocerid snails in Alabama.
+
+### Scripts and Command Line used During Data Analyis
 
 The following are sample scripts used for a single dataset:
 
+  * AMOVA_Elimia_bellacrenata.R
+  * Admixture_LEA.R
+  * OrientAGraph_Visualization.R
+  * SNAQ_Visualization.R
+
 The following are samples of scripts that were used with several datasets:
+
+  * BayesScan_R_Visualization.R
+  * RADpainter_Standard_Visualization.R
 
 ### Check These Repositories for the Most Current Version of the Following Scripts
 
