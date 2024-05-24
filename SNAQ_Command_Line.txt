@@ -15,7 +15,7 @@ taxonmap = Dict(row[:Individual] => row[:Species] for row in eachrow(tm))
 
 ## Assign and load in ML trees from IQtree. This is a one concatanted file of individual locus trees.
 
-iqtreetrees = "ASTRAL_GeneTrees_BS10.tre"
+iqtreetrees = "Elimia_R80_maf025_Multi_GeneTrees_BS10.tre"
 genetrees = readMultiTopology(iqtreetrees);
 
 # Check if Trees are using species taxon map. Individuals in the same species should have the same name. 
@@ -31,7 +31,7 @@ raxmlCF = readTableCF("tableCF_species.csv")
 
 # Assign and load ASTRAL-III species tree.
 
-astralfile = "ASTRAL_SpeciesTree_Rooted.tre"
+astralfile = "Elimia_R80_maf025_Multi_ASTRAL_wTaxonMap_Rooted.tre"
 astraltree = readMultiTopology(astralfile)[1]
 
 # Begin nested Analysis. Generate Network, Save SVG, and generate Observed vs Expected quartet CFs for graphing later.
