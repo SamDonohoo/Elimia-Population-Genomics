@@ -10,7 +10,6 @@ The following are sample scripts used for a single dataset:
   * Admixture_LEA.R
   * OrientAGraph_Visualization.R
   * SNAQ_Visualization.R
-
   * SNAQ_Command_Line.txt
 
 The following are samples of scripts that were used with several datasets:
