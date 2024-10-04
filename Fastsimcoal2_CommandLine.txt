@@ -48,7 +48,7 @@ cat run{1..50}/EbellaBottle1/EbellaBottle1.bestlhoods | grep -v "NCUR" > EbellaB
 
 # Either load the .bestlhoods files into R with no header or manually copy over the header for each type of Model.
 
-# Determine best-fit model using Part 1 and Part 2 of the R Script: E_bellacrenata_FSC2_Demographic_Analyses.R
+# Determine best-fit model using Part 1 and Part 2 of the R Script: Fastsimcoal2_Demographic_Analyses.R
 # Part 1 - For each model note the parameters with the lowest (i.e. best) MaxObsLHood. Save in R.
 # Part 2 - Calculate AIC, Delta AIC, and Weighted AIC to determine the best fit model.
 
@@ -78,7 +78,7 @@ for i in {1..100}; do cd EbellaBottle1_boot_$i; cat run{1..50}/EbellaBottle1/Ebe
 
 cat EbellaBottle1_boot_*/EbellaBottle1_Single.bestlhoods > EbellaBottle1_Bootstrapping.bestlhoods
 
-# Analyze the Bootstrap ranges to generate the 95% Confidence Intervals using Part 3 of the R Script: E_bellacrenata_FSC2_Demographic_Analyses.R
+# Analyze the Bootstrap ranges to generate the 95% Confidence Intervals using Part 3 of the R Script: Fastsimcoal2_Demographic_Analyses.R
 
 Questions or Comments:
 Sam Donohoo
