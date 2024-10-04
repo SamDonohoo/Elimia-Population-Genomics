@@ -1,3 +1,4 @@
+# Example Command Line for a Species/Population
 # Commands for running fastsimcoal2 (FSC27) Demographic Analyses on Elimia bellacrenata from the Ebenezer Swamp Complex.
 
 # Start by making a Conda Environmnent and Load in Packages Necessary for .fs file creation: dadi, demes, nlopt, pickle, matplotlib, numpy, pylab, vcf.
