@@ -2,6 +2,8 @@
 
 Scripts and command line from study on spring-associated pleurocerid snails in Alabama.
 
+Raw data and files can be found at INSERTLINKHERE
+
 ### Scripts and Command Line used During Data Analyis
 
 The following are sample scripts used for a single dataset:
