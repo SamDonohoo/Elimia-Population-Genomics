@@ -1,0 +1,84 @@
+# Commands for running fastsimcoal2 (FSC27) Demographic Analyses on Elimia bellacrenata from the Ebenezer Swamp Complex.
+
+# Start by making a Conda Environmnent and Load in Packages Necessary for .fs file creation: dadi, demes, nlopt, pickle, matplotlib, numpy, pylab, vcf.
+# Downloading fastsimcoal2 from http://cmpg.unibe.ch/software/fastsimcoal27/
+# Download script for converting SNPs files to a readable txt file for dadi: vcf2dadi.py
+# Download the program EasySFS to evaluate if downsizing is necessary and determine the best projection value.
+# Open Conda Enviroment for .fs file creation.
+
+# Input files include unzipped SNPs file and a popmap of sample locations.
+
+# Start by running EasySFS to evaluate projection values. Use --preview to see potential projections.
+# Downsizing can improve projections and minimize missing data.
+## NOTE: EasySFS does produce FSC27 output files; however, the data isn't polarized which is necessary when the ancestral allele is unknown.
+ ./easySFS -i E_bella_R100_maf001_Multi.snps.vcf -p E_bella_PopList.txt --preview
+ 
+# Create .fs readable VCF file using the script vcf2dadi.py
+# Note: Popmap file is slightly organized differently for this script. See E_bellacrenata_PopList_VCF2FS.txt for example.
+
+Python3 vcf2dadi.py -vcf E_bella_R100_maf001_Multi.snps.vcf -p E_bella_PopList_VCF2FS.txt -o Ebella_Multi_R100.txt
+
+# Create .fs file using script Ebella_vcftosfs.py. Modify for your project file names.
+Python3 Ebella_vcftosfs.py
+
+# Copy the .fs file and rename / modify the first 2 header lines in both files into the correct fastsimcoal2 files. See Ebella_MSFS.obs and Ebella_MAFpop0.obs
+
+# Create folders to store results for each FSC27 Model i.e. ModelA, ModelB etc.
+
+# Copy both .obs files into each folder. Generate .est and .tpl files. Easiest way is to copy the .tpl/.est files provided here or use an example file from FSC27 and edit.
+# Each model with have different parameters. Edit carefully.
+# Before running rename the prefix for all files to the same thing.
+## Example: (EbellaBottle1): EbellaBottle1.est, EbellaBottle1.tpl, EbellaBottle1_MAFpop0.obs, EbellaBottle1_MSFS.obs
+
+# Basic FSC27 Command. Runs once. 
+## Flags: -t = .tpl file, -e = .est file, -M = a single population, -L = # of optimization cycles, -q = quiet mode, -c# = # of threads, -n = # of simulations.
+
+/home/sad0046/fastsimcoal2_Home/fsc27_linux64/fsc27093 -t EbellaBottle1.tpl -n 1000000 -m -e EbellaBottle1.est -M -L 40 -q -c12
+
+# Using a For Loop with 50 replicates, Create a new Folder and run FSC27 with the following parameters: 1,000,000 simulations, 40 optimzation cyles, and 12 threads.
+
+for i in {1..50}; do mkdir run$i; cp EbellaBottle1.tpl EbellaBottle1.est EbellaBottle1_MAFpop0.obs EbellaBottle1_MSFS.obs run$i"/"; cd run$i; /home/sad0046/fastsimcoal2_Home/fsc27_linux64/fsc27093 -t EbellaBottle1.tpl -n 1000000 -m -e EbellaBottle1.est -M -L 40 -q -c12; cd ../; done
+
+# Concatenate the resulting .bestlhoods file from all 50 datasets into a single file.
+
+cat run{1..50}/EbellaBottle1/EbellaBottle1.bestlhoods | grep -v "NCUR" > EbellaBottle1_Multi.bestlhoods
+
+# Repeat Process for all Models Tested.
+
+# Either load the .bestlhoods files into R with no header or manually copy over the header for each type of Model.
+
+# Determine best-fit model using Part 1 and Part 2 of the R Script: E_bellacrenata_FSC2_Demographic_Analyses.R
+# Part 1 - For each model note the parameters with the lowest (i.e. best) MaxObsLHood. Save in R.
+# Part 2 - Calculate AIC, Delta AIC, and Weighted AIC to determine the best fit model.
+
+# Conduct non-parametric bootstrapping for the best-fitted models (i.e., any model with an AIC < 2) using the following.
+
+# Copy the .est, .tpl, *_MAFpop0.obs, *_MSFS.obs, and *_maxL.par file into a new folder.
+# Create a .pv file which lists the best fit starting parameters. See FSC27 manual or EbellaBottle1.pv for an example.
+# Modifiy the *_maxL.par file for bootstrapping to include the # of SNPS used and the data type to be DNA. Rename to *.par 
+## See EbellaBottle1.par in Bootstrapping_Model_C for an example.
+
+# Generate 100 pseudo-datasets using the original datasets with the following command. Flags: -b is set to 99 since it will also copy over the original dataset for a total of 100.
+
+/home/sad0046/Programs/fsc27_linux64/fsc27093 -i EbellaBottle1.par -n1 -q -j -s0 -m -b99
+
+# Copy the .tpl, .est, and .pv file into the new results folder. 100 dataset folders should be created.
+# Using a For Loop, copy the necessary files into one of the newly created pseuodo-dataset folder and run each pseudo-dataset for 50 replicates.
+
+for i in EbellaBottle1_{1..100}; do cp EbellaBottle1.tpl $i; cp EbellaBottle1.est $i; cp EbellaBottle1.pv $i; done
+
+## This step is very time-consuming. Splitting up the For Loop into several smaller loops (i.e. 1-20, 21-40 etc.) with parallel threads is much faster. Increasing # of threads past 24 is no longer efficient.
+
+for i in {1..100}; do cd EbellaBottle1_$i; for j in {1..50}; do mkdir run$j; cp EbellaBottle1.tpl EbellaBottle1.est EbellaBottle1_MAFpop0.obs EbellaBottle1_numPolySites.obs EbellaBottle1.pv run$j"/"; cd run$j; /home/sad0046/Programs/fsc27_linux64/fsc27093 -t EbellaBottle1.tpl -n 1000000 -m -e EbellaBottle1.est -M -L 40 -q -c12 --initvalues EbellaBottle1.pv; cd ../; done; cd ../; done
+
+# Within each pseudo-dataset concatenate the resulting .bestlhoods file from all 50 datasets into a single file then save the bootstrap with the best-fit parameters (i.e., lowest MaxObsLHood) into a new file.
+
+for i in {1..100}; do cd EbellaBottle1_boot_$i; cat run{1..50}/EbellaBottle1/EbellaBottle1.bestlhoods | sort -nk4 | awk 'NR==50 {print}' > EbellaBottle1_Single.bestlhoods; cd ../; done
+
+cat EbellaBottle1_boot_*/EbellaBottle1_Single.bestlhoods > EbellaBottle1_Bootstrapping.bestlhoods
+
+# Analyze the Bootstrap ranges to generate the 95% Confidence Intervals using Part 3 of the R Script: E_bellacrenata_FSC2_Demographic_Analyses.R
+
+Questions or Comments:
+Sam Donohoo
+Email: sad0046@auburn.edu or sadonohoo@gmail.com
