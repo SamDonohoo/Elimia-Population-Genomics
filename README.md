@@ -1,6 +1,6 @@
 ## Elimia-Population-Genomics
 
-Scripts and command line from study on spring-associated pleurocerid snails in Alabama.
+Scripts and command line from study on spring-obligate pleurocerid snails in Alabama.
 
 Raw data and files can be found at INSERTLINKHERE
 
