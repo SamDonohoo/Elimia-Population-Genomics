@@ -10,6 +10,7 @@ The following are sample scripts used for a single dataset:
 
   * AMOVA_Elimia_bellacrenata.R
   * Admixture_LEA.R
+  * Fstat_Calculation.R
   * OrientAGraph_Visualization.R
   * SNAQ_Visualization.R
   * SNAQ_Command_Line.txt
