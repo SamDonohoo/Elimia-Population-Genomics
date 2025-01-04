@@ -40,11 +40,11 @@ plot(obj.snmf_10000, cex = 1.2, col = "blue", pch = 19,)
 ## Determine the best-fit run for the best fit K value.
 # For this study K =5
 
-ce5 <- cross.entropy(obj.snmf, K = 5)
+ce5 <- cross.entropy(obj.snmf_10, K = 5)
 
 best5 <- which.min(ce5)
 
-qmatrix5 = Q(obj.snmf, K = 5, run = best5)
+qmatrix5 = Q(obj.snmf_10, K = 5, run = best5)
 
 ## Visualize the Admixture Plot
 
