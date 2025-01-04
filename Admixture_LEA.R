@@ -1,17 +1,17 @@
-# Install BiocManager and LEA
+# Uncomment to install BiocManager and LEA
 
-if (!require("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
+#if (!require("BiocManager", quietly = TRUE))
+#  install.packages("BiocManager")
 
-BiocManager::install("LEA")
+#BiocManager::install("LEA")
 
-# Load BiocManager and Lea libraries
+# Load BiocManager and LEA libraries
 
 library(LEA)
 library(BiocManager)
 
 # Set working directory
-setwd("C:/Users/pred9/Desktop/AU_PhD/Auburn Stuff/2DRad-Ebell-Ecoc/2024_Jan_Redos/ElimiaS_LEA/")
+setwd("C:/Users/nwhelan/My Documents/students/Donohoo/3RAD_lab-work/")
 
 # Load data from Single SNP VCF produced by Stacks
 
@@ -24,10 +24,18 @@ E_bcNWR_Ecar <- vcf2geno(input.file, output.file = "Elimia_R80_maf025_singlesnp_
 # Estimate admixture coefficients.
 ## K is the number of ancestral populations. Provide a range to estimate the best-fit K.
 
-obj.snmf = snmf(E_bcNWR_Ecar, K = 1:8, project = "new",repetitions = 10, tolerance = 0.00001, entropy=TRUE, ploidy = 2)
+obj.snmf_1 = snmf(E_bcNWR_Ecar, K = 3:8, project = "new", alpha = 1, tolerance = 0.0000000001, repetitions = 10, entropy=TRUE, ploidy = 2)
+obj.snmf_10 = snmf(E_bcNWR_Ecar, K = 3:8, project = "new", alpha = 10, tolerance = 0.0000000001, repetitions = 10, entropy=TRUE, ploidy = 2)
+obj.snmf_100 = snmf(E_bcNWR_Ecar, K = 3:8, project = "new", alpha = 100, tolerance = 0.0000000001, repetitions = 10, entropy=TRUE, ploidy = 2)
+obj.snmf_1000 = snmf(E_bcNWR_Ecar, K = 3:8, project = "new", alpha = 1000, tolerance = 0.0000000001, repetitions = 10, entropy=TRUE, ploidy = 2)
+obj.snmf_10000 = snmf(E_bcNWR_Ecar, K = 3:8, project = "new", alpha = 10000, tolerance = 0.0000000001, repetitions = 10, entropy=TRUE, ploidy = 2)
 
 # Plot the Cross Entropy score for each # of Ancestral Populations.
-plot(obj.snmf, cex = 1.2, col = "blue", pch = 19)
+plot(obj.snmf_1, cex = 1.2, col = "blue", pch = 19,)
+plot(obj.snmf_10, cex = 1.2, col = "blue", pch = 19,)
+plot(obj.snmf_100, cex = 1.2, col = "blue", pch = 19,)
+plot(obj.snmf_1000, cex = 1.2, col = "blue", pch = 19,)
+plot(obj.snmf_10000, cex = 1.2, col = "blue", pch = 19,)
 
 ## Determine the best-fit run for the best fit K value.
 # For this study K =5
@@ -44,5 +52,4 @@ barplot(t(qmatrix5), col = c("orange", "violet", "lightgreen", "lightblue", "yel
         border = "black", space = 0, xlab = "K = 5",
         ylab = "Admixture coefficients")
 
-View(qmatrix5)
 
