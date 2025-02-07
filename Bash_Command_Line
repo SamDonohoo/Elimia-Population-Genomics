@@ -1,5 +1,10 @@
 # The following is a compilation of all major bash scripts used for our population genomic analyses:
 
+# Demultiplexing Sequencing Data using Stacks: process_radtags
+
+process_radtags -1 4081_S0_L001_R1_001.fastq.gz -2 4081_S0_L001_R1_001_Duplicate.fastq.gz -b Barcodes.txt \
+-o NWR/ -c -r -D --index-index --disable-rad-check
+
 # Read Counts following Process Radtags + Filtering
 
 for i in *.1.fasta; do grep ">" $i | wc -l >> ReadCount.txt; done
