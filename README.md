@@ -2,9 +2,9 @@
 
 Scripts and command line from study on spring-obligate pleurocerid snails in Alabama.
 
-Raw data and files can be found at INSERTLINKHERE
+Raw data and files can be found at (https://figshare.com/articles/dataset/Unique_Genetic_Diversity_Patterns_and_Extreme_Endemism_in_Temperate_Springs_Evidence_from_Narrow-Range_Endemic_Snails/25884100)
 
-### Scripts and Command Line used During Data Analyis
+### Scripts and Command Line used During Data Analysis
 
 The following are sample scripts used for a single dataset:
 
